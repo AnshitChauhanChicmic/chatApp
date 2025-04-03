@@ -1,12 +1,17 @@
 import express from 'express';
 import { PORT } from './config/config.ts';
+import { serverStartup } from './app/startup/serverStartup.ts';
 
 const app = express();
 
-app.get('/', (req: express.Request, res: express.Response | any) => {
-    return res.send('hi')
-})
+async function startNodeServer() {
+    await serverStartup(app);
+}
 
-app.listen(PORT, () => {
-    console.log('server running')
+startNodeServer().then(() => {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`)
+    })
+}).catch((error) => {
+    console.log('Error running server', error.message)
 })
