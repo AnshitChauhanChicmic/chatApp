@@ -23,14 +23,18 @@ let getHandlerMethod = (route: any) => {
     const { handler } = route;
     return (request: Request | any, response: Response) => {
         let payload = {
-            ...((request.body || {}).value || {}),
-            ...((request.params || {}).value || {}),
-            ...((request.query || {}).value || {}),
+            ...(request.body || {}),
+            ...(request.params || {}),
+            ...(request.query || {}),
+            file: (request.file || {}),
             user: (request.user ? request.user : {}),
         }
         handler(payload)
             .then((result: any) => {
-                response.status(result.statusCode).send(result.data);
+                if (result.data) {
+                    return response.status(result.statusCode).send(result.data);
+                }
+                return response.status(result.statusCode).send(result.message);
             })
             .catch((error: Error) => {
                 console.log('Error is ', error.message);

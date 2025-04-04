@@ -1,23 +1,30 @@
+import { createErrorResponse, createSuccessResponse } from "../helpers/resHelpers"
 import { User } from "../models"
 import { dbService } from "../service/dbService"
+import { MESSAGES } from "../utils/messages"
+import utils from "../utils/utils"
 
 const userSignup = async (payload: any) => {
-    // let checkUserExists = await dbService.checkDataExistsInDb(
-    //     User,
-    //     { $and: [{ email: payload.value.email }, { isDeleted: { $exists: 0 } }] }
-    // )
+    let checkUserExists = await dbService.checkDataExistsInDb(
+        User,
+        { $and: [{ email: payload.email }, { isDeleted: { $exists: 0 } }] }
+    )
 
-    // if (checkUserExists) {
+    if (checkUserExists) {
+        return createErrorResponse(MESSAGES.EXISTING_EMAIL);
+    }
 
-    // }
+    // let pass = utils.hashPass(payload.password);
 
-    // const userData = {
-    //     name: payload.value.name,
-    //     email: payload.value.email,
-    //     password: payload.value.password
-    // }
+    const userData = {
+        name: payload.name,
+        email: payload.email,
+        password: payload.password
+    }
 
-    return {statusCode: 200, data: 'User signed up successfully'}
+    await dbService.addDataToDb(User, userData)
+
+    return createSuccessResponse(MESSAGES.USER_SIGNUP);
 }
 
 export const userController = {

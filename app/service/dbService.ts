@@ -2,9 +2,9 @@ import { Collection, Document, Filter, UpdateFilter, WithId } from "mongodb";
 import { FilterQuery, Model } from "mongoose";
 
 export const dbService = {
-    addDataToDb: async (model: Collection<Document>, data: Document)
-        : Promise<void> => {
-        await model.insertOne(data);
+    addDataToDb: async <T>(model: Model<T>, data: FilterQuery<T>)
+        : Promise<T | null> => {
+        return await model.insertOne(data);
     },
 
     modifyData: async (model: Collection<Document>, query: Filter<Document>, update: UpdateFilter<Document> | Partial<Document>)
