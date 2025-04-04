@@ -32,7 +32,7 @@ let getHandlerMethod = (route: any) => {
         handler(payload)
             .then((result: any) => {
                 if (result.data) {
-                    return response.status(result.statusCode).send(result.data);
+                    return response.status(result.statusCode).send({message: result.message, data: result.data});
                 }
                 return response.status(result.statusCode).send(result.message);
             })

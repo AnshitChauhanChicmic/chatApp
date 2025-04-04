@@ -10,7 +10,11 @@ export const userRoutes = [
             model: 'UserRegister',
             
         },
-        // handler: userControler.userSignup
         handler: userController.userSignup
     },
+    {
+        method: 'POST',
+        path: '/user/login',
+        handler: userController.userLogin
+    }
 ]

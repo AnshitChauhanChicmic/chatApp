@@ -1,5 +1,4 @@
-import { Collection, Document, Filter, UpdateFilter, WithId } from "mongodb";
-import { FilterQuery, Model } from "mongoose";
+import { FilterQuery, Model, UpdateQuery } from "mongoose";
 
 export const dbService = {
     addDataToDb: async <T>(model: Model<T>, data: FilterQuery<T>)
@@ -7,8 +6,8 @@ export const dbService = {
         return await model.insertOne(data);
     },
 
-    modifyData: async (model: Collection<Document>, query: Filter<Document>, update: UpdateFilter<Document> | Partial<Document>)
-        : Promise<void> => {
+    modifyData: async <T>(model: Model<T>, query: FilterQuery<T>, update: UpdateQuery<T>)
+        : Promise<any> => {
         await model.updateOne(query, update);
     },
 
@@ -22,8 +21,8 @@ export const dbService = {
         return await model.countDocuments({ _id: taskId });
     },
 
-    listTasks: async (model: Collection<Document>, query: Filter<Document>)
-        : Promise<WithId<Document>[]> => {
-        return await model.find(query).toArray();
+    listTasks: async <T>(model: Model<T>, query: FilterQuery<T>)
+        : Promise<any> => {
+        return await model.find(query);
     },
 };
