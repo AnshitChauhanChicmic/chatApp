@@ -18,6 +18,7 @@ const userSignup = async (payload: any) => {
         email: payload.email,
         password: pass
     }
+
     await dbService.addDataToDb(User, userData)
     return createSuccessResponse(MESSAGES.USER_SIGNUP);
 }
@@ -34,12 +35,20 @@ const userLogin = async (payload: any) => {
     if (!pass) {
         return createErrorResponse(MESSAGES.INVALID_PASSWORD)
     }
+
     let userId = user._id || '';
     let token = await utils.generateToken(userId.toString());
+    await dbService.modifyData(User, { email: user.email }, { $set: { session: token } })
     return createSuccessResponse(MESSAGES.USER_LOGIN, { data: token })
+}
+
+const userLogout = async (payload: any) => {
+    await dbService.modifyData(User, { email: payload.user.email }, { $unset: { session: 1 } });
+    return createSuccessResponse(MESSAGES.USER_LOGOUT);
 }
 
 export const userController = {
     userSignup,
-    userLogin
+    userLogin,
+    userLogout
 }

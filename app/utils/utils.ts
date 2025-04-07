@@ -15,7 +15,7 @@ const utils = {
     },
 
     generateToken: async (id: string): Promise<string> => {
-        return await jwt.sign({ id: id.toString() }, config.TOKEN_KEY as string, { expiresIn: "6h" });
+        return await jwt.sign({ id: id.toString() }, config.TOKEN_KEY as string, { expiresIn: "24h" });
     },
 
     verify: async (token: string): Promise<jwt.JwtPayload> => {

@@ -25,4 +25,9 @@ export const dbService = {
         : Promise<any> => {
         return await model.find(query);
     },
+
+    findAndUpdate: async <T>(model: Model<T>, query: FilterQuery<T>, update: UpdateQuery<T>)
+        : Promise<any> => {
+        return await model.findOneAndUpdate(query, update);
+    },
 };
