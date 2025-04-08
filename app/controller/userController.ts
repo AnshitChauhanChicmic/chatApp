@@ -3,6 +3,7 @@ import { User } from "../models"
 import { dbService } from "../service/dbService"
 import { MESSAGES } from "../utils/messages"
 import utils from "../utils/utils"
+import { Types } from 'mongoose';
 
 const userSignup = async (payload: any) => {
     let checkUserExists = await dbService.checkDataExistsInDb(
@@ -14,10 +15,11 @@ const userSignup = async (payload: any) => {
     }
     let pass = await utils.hashPass(payload.password);
     const userData = {
+        _id: new Types.ObjectId(),
         name: payload.name,
         email: payload.email,
         password: pass
-    }
+    };
 
     await dbService.addDataToDb(User, userData)
     return createSuccessResponse(MESSAGES.USER_SIGNUP);
