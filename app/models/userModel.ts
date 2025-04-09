@@ -8,4 +8,4 @@ const userSchema = new mongoose.Schema({
     session: String
 })
 
-export const userModel = mongoose.model('userRecords', userSchema);
+export const userModel = mongoose.model('user-records', userSchema);

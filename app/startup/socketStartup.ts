@@ -43,6 +43,9 @@ io.on('connection', (socket) => {
     // join group
     socketService.joinGroup(socket);
 
+    // group message
+    socketService.sendGroupMessage(socket);
+    
 })
 
 export { app, server, io }

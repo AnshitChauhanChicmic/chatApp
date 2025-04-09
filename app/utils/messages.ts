@@ -6,4 +6,7 @@ export const MESSAGES = {
     USER_LOGIN: 'User login successfully',
     USER_LOGOUT: 'User logout successfully',
     INVALID_USER: 'Invalid user',
+    OTP_SENT: 'Check your email',
+    PASSWORD_CHANGED: 'Password changed successfully',
+    USER_UPDATED: 'User updated successfully'
 }

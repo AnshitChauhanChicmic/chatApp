@@ -22,7 +22,7 @@ export const userRoutes = [
         path: '/user/login',
         joiSchemaForSwaggers: {
             group: 'user',
-            description: 'login a new user',
+            description: 'login a user',
             model: 'UserLogin',
             body: joi.object({
                 email: joi.string().email().required(),
@@ -36,5 +36,48 @@ export const userRoutes = [
         path: '/user/logout',
         auth: true,
         handler: userController.userLogout
+    },
+    {
+        method: 'POST',
+        path: '/user/forgotPassword',
+        joiSchemaForSwaggers: {
+            group: 'user',
+            description: 'forgot password',
+            model: 'Forgot Password',
+            body: joi.object({
+                email: joi.string().email().required()
+            })
+        },
+        handler: userController.forgotPassword
+    },
+    {
+        method: 'POST',
+        path: '/user/changePassword',
+        joiSchemaForSwaggers: {
+            group: 'user',
+            description: 'forgot password',
+            model: 'Forgot Password',
+            body: joi.object({
+                email: joi.string().email().required(),
+                password: joi.string().required()
+
+            })
+        },
+        handler: userController.changePassword
+    },
+    {
+        method: 'POST',
+        path: '/user/update',
+        auth: true,
+        joiSchemaForSwaggers: {
+            group: 'user',
+            description: 'forgot password',
+            model: 'Forgot Password',
+            body: joi.object({
+                name: joi.string().required(),
+
+            })
+        },
+        handler: userController.updateUser
     }
 ]
