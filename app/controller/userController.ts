@@ -6,7 +6,7 @@ import { MESSAGES } from "../utils/messages"
 import utils from "../utils/utils"
 import { Types } from 'mongoose';
 
-const userSignup = async (payload: any) => {
+const signup = async (payload: any) => {
     let checkUserExists = await dbService.checkDataExistsInDb(
         User,
         { $and: [{ email: payload.email }, { isDeleted: { $exists: 0 } }] }
@@ -26,7 +26,7 @@ const userSignup = async (payload: any) => {
     return createSuccessResponse(MESSAGES.USER_SIGNUP);
 }
 
-const userLogin = async (payload: any) => {
+const login = async (payload: any) => {
     let user = await dbService.checkDataExistsInDb(
         User,
         { $and: [{ email: payload.email }, { isDeleted: { $exists: 0 } }] }
@@ -48,7 +48,7 @@ const userLogin = async (payload: any) => {
     return createSuccessResponse(MESSAGES.USER_LOGIN, { data: token })
 }
 
-const userLogout = async (payload: any) => {
+const logout = async (payload: any) => {
     await dbService.modifyData(
         User,
         { email: payload.user.email }, { $unset: { session: 1 } }
@@ -90,9 +90,9 @@ const updateUser = async (payload: any) => {
 
 
 export const userController = {
-    userSignup,
-    userLogin,
-    userLogout,
+    signup,
+    login,
+    logout,
     forgotPassword,
     changePassword,
     updateUser

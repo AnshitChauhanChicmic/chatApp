@@ -15,7 +15,7 @@ export const userRoutes = [
                 password: joi.string().required()
             })
         },
-        handler: userController.userSignup
+        handler: userController.signup
     },
     {
         method: 'POST',
@@ -29,13 +29,13 @@ export const userRoutes = [
                 password: joi.string().required()
             })
         },
-        handler: userController.userLogin
+        handler: userController.login
     },
     {
         method: 'POST',
         path: '/user/logout',
         auth: true,
-        handler: userController.userLogout
+        handler: userController.logout
     },
     {
         method: 'POST',
