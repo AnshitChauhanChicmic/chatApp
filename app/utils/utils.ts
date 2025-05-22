@@ -33,9 +33,10 @@ const utils = {
 
 export const commonFunction = {
     generateOTP: () => {
-        return Math.random() * 10000;
+        const otp: number = Math.floor(Math.random() * 10000);
+        return otp;
     },
-    generateTemplate: (otp: any, username: string) => {
+    generateTemplate: (otp: any, user: any) => {
         var source = "<html>" +
             "<head><title>OTP Verification</title></head>" +
             "<body><p>Hi {{username}}</p>" +
@@ -46,15 +47,15 @@ export const commonFunction = {
             "<p>Thanks,<br>{{companyName}}</p></body>" +
             "</html>";
         var template = handlebars.compile(source);
-        var data = { username: username, purpose: "Forgot Password", otp: otp, expiryMinutes: 2, companyName: "Chicmic Studios" };
+        var data = { username: user.name, purpose: "Forgot Password", otp: otp, expiryMinutes: 2, companyName: "Chicmic Studios" };
         var result = template(data);
         return result;
     },
-    sendOTP: async (email: string, otp: any, username: any) => {
+    sendOTP: async (user: any, otp: any) => {
         try {
-            console.log(" Email Received:", email);
+            console.log(" Email Received:", user.email);
 
-            if (!email) {
+            if (!user.email) {
                 throw new Error("Email not defined");
             }
 
@@ -69,13 +70,13 @@ export const commonFunction = {
 
             const mailOptions = {
                 from: '<>',
-                to: email,
+                to: user.email,
                 subject: "Forgot Password Email",
-                html: commonFunction.generateTemplate(otp, username)
+                html: commonFunction.generateTemplate(otp, user)
             };
 
             await transporter.sendMail(mailOptions);
-            console.log(`OTP sent successfully to ${email}`);
+            console.log(`OTP sent successfully to ${user.email}`);
             return true;
         } catch (error) {
             console.error("Error sending email:", error);

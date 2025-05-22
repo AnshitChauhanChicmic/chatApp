@@ -63,7 +63,7 @@ const forgotPassword = async (payload: any) => {
     if (!user) {
         return createErrorResponse(MESSAGES.EMAIL_DOESNOT_EXIST);
     }
-    await commonFunction.sendOTP(payload.email, commonFunction.generateOTP, user.name);
+    await commonFunction.sendOTP(user, commonFunction.generateOTP);
     return createSuccessResponse(MESSAGES.OTP_SENT);
 }
 
