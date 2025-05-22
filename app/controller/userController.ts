@@ -71,7 +71,8 @@ const changePassword = async (payload: any) => {
     let pass = await utils.hashPass(payload.password);
     let userDetails = await dbService.findAndUpdate(
         User,
-        { email: payload.email }, { $set: { password: pass } }
+        { email: payload.email }, { $set: { password: pass } },
+        {}
     )
     if (!userDetails) {
         return createErrorResponse(MESSAGES.EMAIL_DOESNOT_EXIST);

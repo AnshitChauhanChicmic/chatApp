@@ -1,11 +1,11 @@
 import { Socket } from "socket.io";
 import { dbService } from "./dbService";
-import { UserMessage } from "../models";
+import { Message, ChatModel } from "../models";
 
 const sendPersonalMessage = (socket: Socket) => {
     socket.on('private-message', async ({ msg, to }) => {
         await dbService.addDataToDb(
-            UserMessage,
+            Message,
             { senderId: socket.user._id.toString(), receiverId: to, message: msg }
         )
         socket.to(to).emit('pvt-msg', msg);
@@ -14,8 +14,15 @@ const sendPersonalMessage = (socket: Socket) => {
 }
 
 const joinGroup = (socket: Socket) => {
-    socket.on('join-group', ({ group }) => {
+    socket.on('join-group', async ({ group }) => {
         socket.join(group);
+        await dbService.findAndUpdate(
+            ChatModel,
+            { group: group },
+            { $addToSet: { participants: socket.user._id } },
+            { upsert: true, new: true }
+        );
+
         socket.to(group).emit('group-joined', `${socket.user.name} joined ${group} `);
     })
 }
@@ -24,7 +31,7 @@ const sendGroupMessage = (socket: Socket) => {
     socket.on('group-message', async ({ group, msg }) => {
         socket.join(group);
         await dbService.addDataToDb(
-            UserMessage,
+            Message,
             { senderId: socket.user._id.toString(), group: group, message: msg }
         )
         socket.to(group).emit('grp-msg', msg);

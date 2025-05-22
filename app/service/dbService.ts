@@ -1,4 +1,4 @@
-import { FilterQuery, Model, UpdateQuery } from "mongoose";
+import { FilterQuery, Model, UpdateQuery, QueryOptions } from "mongoose";
 
 export const dbService = {
     addDataToDb: async <T>(model: Model<T>, data: FilterQuery<T>)
@@ -26,8 +26,8 @@ export const dbService = {
         return await model.find(query);
     },
 
-    findAndUpdate: async <T>(model: Model<T>, query: FilterQuery<T>, update: UpdateQuery<T>)
+    findAndUpdate: async <T>(model: Model<T>, query: FilterQuery<T>, update: UpdateQuery<T>, option: QueryOptions<T>)
         : Promise<any> => {
-        return await model.findOneAndUpdate(query, update);
+        return await model.findOneAndUpdate(query, update, option);
     },
 };

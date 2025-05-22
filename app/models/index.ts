@@ -1,7 +1,9 @@
 import { userModel } from "./userModel";
 import { messageModel } from "./messageModel";
+import { chatModel } from "./chatModel";
 
 const User = userModel;
-const UserMessage = messageModel;
+const Message = messageModel;
+const ChatModel = chatModel;
 
-export { User, UserMessage }
+export { User, Message, ChatModel }
