@@ -1,7 +1,8 @@
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken'
+import nodemailer from 'nodemailer'
+import handlebars from 'handlebars';
 import { config } from "../../config/config";
-import mongoose from "mongoose";
 
 const utils = {
 
@@ -29,5 +30,58 @@ const utils = {
         });
     }
 };
+
+export const commonFunction = {
+    generateOTP: () => {
+        return Math.random() * 10000;
+    },
+    generateTemplate: (otp: any, username: string) => {
+        var source = "<html>" +
+            "<head><title>OTP Verification</title></head>" +
+            "<body><p>Hi {{username}}</p>" +
+            "<p>Your OTP for {{purpose}} is: <p>" +
+            "<div>{{otp}}</div>" +
+            "<p>This code is valid for {{expiryMinutes}} minutes.</p>" +
+            "<p>If you did not request this, please ignore this email or contact our support team.</p>" +
+            "<p>Thanks,<br>{{companyName}}</p></body>" +
+            "</html>";
+        var template = handlebars.compile(source);
+        var data = { username: username, purpose: "Forgot Password", otp: otp, expiryMinutes: 2, companyName: "Chicmic Studios" };
+        var result = template(data);
+        return result;
+    },
+    sendOTP: async (email: string, otp: any, username: any) => {
+        try {
+            console.log(" Email Received:", email);
+
+            if (!email) {
+                throw new Error("Email not defined");
+            }
+
+            const transporter = nodemailer.createTransport({
+                host: "sandbox.smtp.mailtrap.io",
+                port: 587,
+                auth: {
+                    user: "d882faf9107243",
+                    pass: "4590bec05e37f4"
+                },
+            });
+
+            const mailOptions = {
+                from: '<>',
+                to: email,
+                subject: "Forgot Password Email",
+                html: commonFunction.generateTemplate(otp, username)
+            };
+
+            await transporter.sendMail(mailOptions);
+            console.log(`OTP sent successfully to ${email}`);
+            return true;
+        } catch (error) {
+            console.error("Error sending email:", error);
+            return false;
+        }
+    }
+}
 
 export default utils;

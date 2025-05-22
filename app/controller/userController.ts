@@ -1,9 +1,8 @@
 import { createErrorResponse, createSuccessResponse } from "../helpers/resHelpers"
-import { sendOTP } from "../helpers/sendOTP"
 import { User } from "../models"
 import { dbService } from "../service/dbService"
 import { MESSAGES } from "../utils/messages"
-import utils from "../utils/utils"
+import utils, { commonFunction } from "../utils/utils"
 import { Types } from 'mongoose';
 
 const signup = async (payload: any) => {
@@ -57,14 +56,14 @@ const logout = async (payload: any) => {
 }
 
 const forgotPassword = async (payload: any) => {
-    let checkUserExists = await dbService.checkDataExistsInDb(
+    let user = await dbService.checkDataExistsInDb(
         User,
         { $and: [{ email: payload.email }, { isDeleted: { $exists: 0 } }] }
     )
-    if (!checkUserExists) {
+    if (!user) {
         return createErrorResponse(MESSAGES.EMAIL_DOESNOT_EXIST);
     }
-    await sendOTP(payload.email);
+    await commonFunction.sendOTP(payload.email, commonFunction.generateOTP, user.name);
     return createSuccessResponse(MESSAGES.OTP_SENT);
 }
 
