@@ -1,13 +1,18 @@
 import { Socket } from "socket.io";
 import { dbService } from "./dbService";
 import { Message, ChatModel } from "../models";
+import { Types } from 'mongoose';
 
 const sendPersonalMessage = (socket: Socket) => {
     socket.on('private-message', async ({ msg, to }) => {
-        await dbService.addDataToDb(
+        const message = await dbService.addDataToDb(
             Message,
-            { senderId: socket.user._id.toString(), receiverId: to, message: msg }
-        )
+            { _id: new Types.ObjectId(), message: msg }
+        );
+        await dbService.addDataToDb(
+            ChatModel,
+            { _id: message?._id, senderId: socket.user._id.toString(), receiverId: to }
+        );
         socket.to(to).emit('pvt-msg', msg);
         socket.emit('pvt-msg', msg);
     })
@@ -19,7 +24,7 @@ const joinGroup = (socket: Socket) => {
         await dbService.findAndUpdate(
             ChatModel,
             { group: group },
-            { $addToSet: { participants: socket.user._id } },
+            { $addToSet: { _id: new Types.ObjectId(), senderId: socket.user._id.toString(), group: group } },
             { upsert: true, new: true }
         );
 
@@ -30,10 +35,14 @@ const joinGroup = (socket: Socket) => {
 const sendGroupMessage = (socket: Socket) => {
     socket.on('group-message', async ({ group, msg }) => {
         socket.join(group);
-        await dbService.addDataToDb(
+        const message = await dbService.addDataToDb(
             Message,
-            { senderId: socket.user._id.toString(), group: group, message: msg }
-        )
+            { _id: new Types.ObjectId(), message: msg }
+        );
+        await dbService.addDataToDb(
+            ChatModel,
+            { _id: message?._id, senderId: socket.user._id.toString(), group: group }
+        );
         socket.to(group).emit('grp-msg', msg);
     })
 }

@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
 
 const messageSchema = new mongoose.Schema({
-    senderId: mongoose.Types.ObjectId,
-    receiverId: mongoose.Types.ObjectId,
+    _id: mongoose.Types.ObjectId,
     message: String,
 
 }, { timestamps: true })

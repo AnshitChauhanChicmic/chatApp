@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
 
 const chatSchema = new mongoose.Schema({
-    group: String,
-    participants: [mongoose.Types.ObjectId],
+    _id: mongoose.Types.ObjectId,
+    senderId: mongoose.Types.ObjectId,
+    receiverId: mongoose.Types.ObjectId,
+    group: String
 
 }, { timestamps: true })
 
