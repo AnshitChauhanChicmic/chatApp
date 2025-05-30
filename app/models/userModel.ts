@@ -5,7 +5,8 @@ const userSchema = new mongoose.Schema({
     name: String,
     email: String,
     password: String,
-    session: String
+    session: String,
+    isDeleted: {type: Boolean, default: false}
 })
 
 export const userModel = mongoose.model('user-records', userSchema);
